@@ -6,51 +6,41 @@
 
 struct Task
 {
-    enum TaskType
-    {
-        NoType = -1,
-        Print = 0,
-        Added = 1,
-        Hashing = 2
-    };
-
-    Task(TaskType setType = NoType);
-    Task(int32_t _id, uint64_t _timeArrival, const std::string &newText, TaskType setType = NoType);
-    virtual ~Task();
-
+    Task();
+    Task(int32_t _id, const std::string &text);
+    virtual ~Task() = default;
     virtual void startTask() = 0;
+    virtual Task *clone() const = 0;
 
     int32_t id;
-    uint64_t timeArrival;
-    std::string text;
-    inline TaskType type() const { return _type; }
-
-private:
-    TaskType _type;
+    std::string _text;
 };
 
 struct PrintTask : public Task
 {
-    PrintTask(int32_t id, uint64_t timeArrival, const std::string &newText);
+    PrintTask(int32_t id, const std::string &text);
     ~PrintTask();
 
     void startTask() override;
+    inline PrintTask *clone() const { return new PrintTask(*this); }
 };
 
-struct AddTask : public Task
+struct CalculateTask : public Task
 {
-    AddTask(int32_t id, uint64_t timeArrival, const std::string &newText);
-    ~AddTask();
+    CalculateTask(int32_t id, const std::string &text);
+    ~CalculateTask();
 
     void startTask() override;
+    inline CalculateTask *clone() const { return new CalculateTask(*this); }
 };
 
 struct HashingTask : public Task
 {
-    HashingTask(int32_t id, uint64_t timeArrival, const std::string &newText);
+    HashingTask(int32_t id, const std::string &text);
     ~HashingTask();
 
     void startTask() override;
+    inline HashingTask *clone() const { return new HashingTask(*this); }
 };
 
 #endif // TASK_H

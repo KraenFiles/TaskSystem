@@ -1,65 +1,49 @@
 #include "Task.h"
 
 #include <iostream>
-#include <functional>
 
-Task::Task(TaskType setType)
-    : id(-1), timeArrival(1000), text("default text"), _type(setType)
+Task::Task() : id(0) {}
+
+Task::Task(int32_t _id, const std::string &text) : id(_id), _text(text) {}
+
+Task::~Task() {}
+
+PrintTask::PrintTask(int32_t id, const std::string &text)
+    : Task(id, text)
 {
 }
 
-Task::Task(int32_t _id, uint64_t _timeArrival, const std::string &newText, TaskType setType)
-    : id(_id), timeArrival(_timeArrival), text(newText), _type(setType)
-{
-}
-
-Task::~Task()
-{
-}
-
-PrintTask::PrintTask(int32_t id, uint64_t timeArrival, const std::string &newText)
-    : Task(id, timeArrival, newText, Print)
-{
-}
-
-PrintTask::~PrintTask()
-{
-}
+PrintTask::~PrintTask() {}
 
 void PrintTask::startTask()
 {
     std::cout << "Printing task for id: " << id << "\n"
-              << text << "\n";
+              << _text << std::endl;
 }
 
-AddTask::AddTask(int32_t id, uint64_t timeArrival, const std::string &newText)
-    : Task(id, timeArrival, newText, Added)
+CalculateTask::CalculateTask(int32_t id, const std::string &text)
+    : Task(id, text)
 {
 }
 
-AddTask::~AddTask()
+CalculateTask::~CalculateTask() {}
+
+void CalculateTask::startTask()
+{
+    std::cout << "CalculateTask task for id: " << id << "\n"
+              << "Lenght is " << _text.length() << std::endl;
+}
+
+HashingTask::HashingTask(int32_t id, const std::string &text)
+    : Task(id, text)
 {
 }
 
-void AddTask::startTask()
-{
-    text.append(" add function");
-    std::cout << "Added task for id: " << id << "\n"
-              << text << "\n";
-}
-
-HashingTask::HashingTask(int32_t id, uint64_t timeArrival, const std::string &newText)
-    : Task(id, timeArrival, newText, Hashing)
-{
-}
-
-HashingTask::~HashingTask()
-{
-}
+HashingTask::~HashingTask() {}
 
 void HashingTask::startTask()
 {
-    size_t hash = std::hash<std::string>{}(text);
+    size_t hash = std::hash<std::string>{}(_text);
     std::cout << "Hashing task for id: " << id << "\n"
-              << hash << "\n";
+              << "Hash is " << hash << std::endl;
 }

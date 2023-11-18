@@ -5,7 +5,7 @@
 процессора.
 */
 
-#include <future>
+#include <thread>
 #include <clocale>
 
 #include "Queue.h"
