@@ -11,16 +11,13 @@ Stack::~Stack()
 {
 }
 
-Stack::ConstIterator Stack::GetTask() const
+Stack::Iterator Stack::GetTask() const
 {
-    if(IsEmpty()) return nullptr;
-    return _taskArray.begin()+(_tasksCount-1);
+    return (_taskArray.end()-1);
 }
 
-Stack::ValueType Stack::PopTask()
+void Stack::PopTask()
 {
     if(IsEmpty()) std::__throw_out_of_range("Stack is empty");
-    ValueType result = _taskArray.at(_tasksCount);
-    --_tasksCount;
-    return result;
+    _taskArray.pop_back();
 }

@@ -23,7 +23,7 @@ protected:
 private:
     Queue *_queue;
 
-    const uint32_t SECS_TO_SEND = 3;
+    const uint32_t MSECS_TO_SEND = 300;
     int32_t sendId;
 };
 

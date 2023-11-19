@@ -31,17 +31,18 @@ void TaskDistributor::Exec()
 
         if (!_queue->IsEmpty())
         {
-            std::visit(*_visitor, *_queue->GetTask());
+            auto refValue = *_queue->GetTask();
+            std::visit(*_visitor, refValue);
             if(_visitor->IsSetTask())
             {
-                _queue->UpdateQueue();
+                _queue->PopTask();
             }
             else
             {
                 if(!_stack->IsFilled())
                 {
-                    auto ref = _queue->PopTask();
-                    _stack->PushTask(ref);
+                    _stack->PushTask(refValue);
+                    _queue->PopTask();
                 }
             }
         }

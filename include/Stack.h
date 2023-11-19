@@ -7,11 +7,13 @@
 class Stack : public TaskContainer<MAX_STACK_SIZE>
 {
 public:
+    typedef Container::const_iterator Iterator;
+
     Stack();
     ~Stack();
     
-    ConstIterator GetTask() const override;
-    ValueType PopTask() override;
+    Iterator GetTask() const override;
+    void PopTask() override;
 };
 
 #endif // STACK_H

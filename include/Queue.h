@@ -7,13 +7,13 @@
 class Queue : public TaskContainer<MAX_QUEUE_SIZE>
 {
 public:
+    typedef Container::const_iterator Iterator;
+
     Queue();
     ~Queue();
     
-    ConstIterator GetTask() const override;
-    ValueType PopTask() override;
-
-    void UpdateQueue();
+    Iterator GetTask() const override;
+    void PopTask() override;
 };
 
 #endif // QUEUE_H
