@@ -2,12 +2,12 @@
 
 #include "Queue.h"
 #include "Stack.h"
-#include "Process.h"
+#include "Processor.h"
 
 #include <thread>
 #include <iostream>
 
-TaskDistributor::TaskDistributor(Queue *queue, Stack *stack, Process<PrintTask> *printProc, Process<AddTask> *addProc, Process<HashingTask> *hashProc)
+TaskDistributor::TaskDistributor(Queue *queue, Stack *stack, Process *printProc, Process *addProc, Process *hashProc)
     : _queue(queue), _stack(stack), _printProc(printProc), _addProc(addProc), _hashingProc(hashProc)
 {
 }

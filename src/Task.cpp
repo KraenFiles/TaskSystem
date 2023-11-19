@@ -2,14 +2,15 @@
 
 #include <iostream>
 
-Task::Task() : id(0) {}
+Task::Task() : id(0), _type(TaskType::NoType) {}
 
-Task::Task(int32_t _id, const std::string &text) : id(_id), _text(text) {}
+Task::Task(int32_t _id, const std::string &text, TaskType setType = NoType) 
+: id(_id), _text(text), _type(setType) {}
 
 Task::~Task() {}
 
 PrintTask::PrintTask(int32_t id, const std::string &text)
-    : Task(id, text)
+    : Task(id, text, TaskType::Print)
 {
 }
 
@@ -22,7 +23,7 @@ void PrintTask::startTask()
 }
 
 CalculateTask::CalculateTask(int32_t id, const std::string &text)
-    : Task(id, text)
+    : Task(id, text, TaskType::Calculate)
 {
 }
 
@@ -35,7 +36,7 @@ void CalculateTask::startTask()
 }
 
 HashingTask::HashingTask(int32_t id, const std::string &text)
-    : Task(id, text)
+    : Task(id, text, TaskType::Hashing)
 {
 }
 

@@ -1,36 +1,17 @@
 #ifndef STACK_H
 #define STACK_H
 
-#include "Task.h"
-#include <memory>
-#include <mutex>
+#include "Configs.h"
+#include "Container.h"
 
-class Stack
+class Stack : public TaskContainer<MAX_STACK_SIZE>
 {
 public:
     Stack();
     ~Stack();
-
-    void addElement(Task *newTask);
-    Task *getElement();
-
-    inline size_t size() const { return _stackSize; }
-    inline bool isFilled() const { return _filled; }
-
-    inline bool isEmpty() const { return _stackSize == -1; }
-
-    void updateStack();
-
-    void showStack();
-
-private:
-    int8_t _stackSize;
-    const size_t MAX_STACK_SIZE = 16;
-    bool _filled;
-
-    std::unique_ptr<Task> _taskArray;
-
-    std::mutex _stackMutex;
+    
+    ConstIterator GetTask() const override;
+    ValueType PopTask() override;
 };
 
 #endif // STACK_H
