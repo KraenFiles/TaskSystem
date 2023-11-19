@@ -27,29 +27,8 @@ file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR}
   "src/**.cpp"
   "src/**.c"
 )
-file(GLOB_RECURSE TESTS RELATIVE ${CMAKE_SOURCE_DIR}
-"tests/**.h"
-"tests/**.hpp"
-"tests/**.cpp"
-)
 
-include(FetchContent)
-FetchContent_Declare(
-  gtest
-  GIT_REPOSITORY "https://github.com/google/googletest"
-  GIT_TAG "main"
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(gtest)
-
-include(GoogleTest)
-include(Dart)
-
-enable_testing()
 add_executable(TaskSystem ${SOURCES} ${TESTS})
-target_link_libraries(TaskSystem GTest::gtest_main)
-
-configure_file( cmake/Config.h.in ${CMAKE_SOURCE_DIR}/include/Config.h @ONLY )
 
 if(RELEASE EQUAL 1)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wextra -Wpedantic -Wall")
@@ -58,11 +37,6 @@ else()
   add_definitions(-DDEBUG)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -Wextra -Wpedantic -Wall")
   if(TEST_MODE EQUAL 1)
-    set(CTEST_OUTPUT_ON_FAILURE ON)
-    gtest_add_tests(TARGET  HashProject
-                    TEST_SUFFIX .noArgs
-                    TEST_LIST   noArgsTests
-    )
   endif()
 endif()
       

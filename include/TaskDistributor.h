@@ -2,34 +2,29 @@
 #define TASKDISTRIBUTOR_H
 
 #include "Task.h"
-#include <mutex>
+//#include <mutex>
 
 class Queue;
 class Stack;
-class Processor;
+class TaskVisitor;
 
 class TaskDistributor
 {
 public:
-    TaskDistributor(Queue *queue, Stack *stack, Processor *printProc, Processor *addProc, Processor *hashProc);
+    TaskDistributor(Queue *queue);
+    ~TaskDistributor();
 
-    void exec();
-    inline void stop() { _stopDistributor = true; }
+    void Exec();
+    inline void Stop() { _stopDistributor = true; }
 
 private:
-    void checkTask(Task *task, bool addInStack);
-    void checkProcessor(Processor *processor, Task *task, bool addInStack);
-
     bool _stopDistributor = false;
 
     Queue *_queue;
     Stack *_stack;
+    TaskVisitor *_visitor;
 
-    Processor *_printProc;
-    Processor *_addProc;
-    Processor *_hashingProc;
-
-    std::mutex _distMutex;
+    //std::mutex _distMutex;
 };
 
 #endif // TASKDISTRIBUTOR_H

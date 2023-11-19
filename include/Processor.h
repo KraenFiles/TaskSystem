@@ -11,7 +11,7 @@ public:
     Processor();
     ~Processor();
 
-    void SetTask(Task *newTask);
+    void SetTask(const Task *newTask);
     void Exec();
 
     inline void Stop() { _stopProcessor = true; }

@@ -13,7 +13,7 @@ Processor::~Processor()
     delete _task;
 }
 
-void Processor::SetTask(Task *newTask)
+void Processor::SetTask(const Task *newTask)
 {
     std::lock_guard<std::mutex> lock(_procMutex);
     _task = newTask->clone();

@@ -6,7 +6,7 @@
 */
 
 #include <thread>
-#include <clocale>
+#include <iostream>
 
 #include "Queue.h"
 #include "Stack.h"
@@ -20,7 +20,6 @@ using std::cout;
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
 {
-    setlocale(LC_ALL, "russian");
     Queue *_queue = new Queue();
     Stack *_stack = new Stack();
     Process<PrintTask> *printProc = new Process<PrintTask>();

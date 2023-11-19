@@ -24,6 +24,7 @@ public:
     }
     virtual ~TaskContainer() = default;
 
+    void PushTask(const Reference newTask);
     void PushTask(Task *newTask);
     virtual ConstIterator GetTask() const = 0;
     virtual ValueType PopTask() = 0;
@@ -44,11 +45,21 @@ protected:
 };
 
 template <size_t containerSize>
-void TaskContainer<containerSize>::PushTask(Task *newTask)
+void TaskContainer<containerSize>::PushTask(const Reference newTask)
 {
     std::lock_guard<std::mutex> lock(_mutex);
     if(_filled) std::__throw_overflow_error("Container is overflow");
-    switch (newTask->type())
+    _taskArray.at(_tasksCount) = newTask;
+    ++_tasksCount;
+    if(_tasksCount == containerSize) _filled = true;
+}
+
+template <size_t containerSize>
+void TaskContainer<containerSize>::PushTask(Task *newTask)
+{
+    Reference task = newTask->clone();
+    PushTask(task);
+    /*switch (newTask->type())
     {
     case Task::Print:
         _taskArray.at(_tasksCount) = PrintTask(newTask->id, newTask->_text);
@@ -62,9 +73,7 @@ void TaskContainer<containerSize>::PushTask(Task *newTask)
     default:
         std::__throw_invalid_argument("NewTask doesn't have task type");
         break;
-    }
-    ++_tasksCount;
-    if(_tasksCount == containerSize) _filled = true;
+    }*/
 }
 
 template<size_t containerSize>

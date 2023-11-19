@@ -13,7 +13,6 @@ public:
     ConstIterator GetTask() const override;
     ValueType PopTask() override;
 
-    private:
     void UpdateQueue();
 };
 

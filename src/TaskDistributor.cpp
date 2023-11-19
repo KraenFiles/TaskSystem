@@ -2,84 +2,48 @@
 
 #include "Queue.h"
 #include "Stack.h"
-#include "Processor.h"
+#include "TaskVisitor.h"
 
 #include <thread>
 #include <iostream>
 
-TaskDistributor::TaskDistributor(Queue *queue, Stack *stack, Process *printProc, Process *addProc, Process *hashProc)
-    : _queue(queue), _stack(stack), _printProc(printProc), _addProc(addProc), _hashingProc(hashProc)
+TaskDistributor::TaskDistributor(Queue *queue)
+    : _queue(queue), _stack(new Stack()), _visitor(new TaskVisitor())
 {
 }
 
-void TaskDistributor::exec()
+TaskDistributor::~TaskDistributor()
+{
+    delete _visitor;
+    delete _stack;
+}
+
+void TaskDistributor::Exec()
 {
     while (!_stopDistributor)
     {
-        if (!_stack->isEmpty())
+        if (!_stack->IsEmpty())
         {
-            Task *task = _stack->getElement();
-            checkTask(task, false);
+            std::visit(*_visitor, *_stack->GetTask());
+            if(_visitor->IsSetTask())
+                _stack->PopTask();
         }
 
-        if (!_queue->isEmpty())
+        if (!_queue->IsEmpty())
         {
-            Task *task = _queue->getElement();
-            checkTask(task, true);
-        }
-    }
-}
-
-void TaskDistributor::checkTask(Task *task, bool addInStack)
-{
-
-    switch (task->type())
-    {
-    case Task::Print:
-    {
-        PrintTask *printTask = static_cast<PrintTask *>(task);
-        checkProcessor(_printProc, printTask, addInStack);
-        break;
-    }
-    case Task::Added:
-    {
-        AddTask *addTask = static_cast<AddTask *>(task);
-        checkProcessor(_addProc, addTask, addInStack);
-        break;
-    }
-    case Task::Hashing:
-    {
-        HashingTask *hashingTask = static_cast<HashingTask *>(task);
-        checkProcessor(_hashingProc, hashingTask, addInStack);
-        break;
-    }
-
-    default:
-        break;
-    }
-}
-
-template <typename T>
-void TaskDistributor::checkProcessor(Process<T> *processor, T *task, bool addInStack)
-{
-    if (!processor->isBuzy())
-    {
-        processor->setTask(task);
-        if (addInStack)
-            _queue->updateQueue();
-        else
-            _stack->updateStack();
-    }
-    else if (addInStack)
-    {
-        if (!_stack->isFilled())
-        {
-            _stack->addElement(task);
-            _queue->updateQueue();
-        }
-        else
-        {
-            std::clog << "Стек переполнен!";
+            std::visit(*_visitor, *_queue->GetTask());
+            if(_visitor->IsSetTask())
+            {
+                _queue->UpdateQueue();
+            }
+            else
+            {
+                if(!_stack->IsFilled())
+                {
+                    auto ref = _queue->PopTask();
+                    _stack->PushTask(ref);
+                }
+            }
         }
     }
 }
