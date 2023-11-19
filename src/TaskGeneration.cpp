@@ -14,13 +14,13 @@ TaskGeneration::~TaskGeneration()
 {
 }
 
-void TaskGeneration::exec()
+void TaskGeneration::Exec()
 {
     while (true)
     {
-        if (!_queue->isFilled())
+        if (!_queue->IsFilled())
         {
-            createTask();
+            CreateTask();
         }
         else
         {
@@ -29,7 +29,7 @@ void TaskGeneration::exec()
     }
 }
 
-void TaskGeneration::createTask()
+void TaskGeneration::CreateTask()
 {
     std::random_device rand;
     std::default_random_engine randEngine(rand());
@@ -44,19 +44,19 @@ void TaskGeneration::createTask()
     switch (taskNum)
     {
     case Task::Print:
-        newTask = new PrintTask(sendId, distTime(randEngine), std::to_string(distText(randEngine)));
+        newTask = new PrintTask(sendId, std::to_string(distText(randEngine)));
         break;
 
-    case Task::Added:
-        newTask = new AddTask(sendId, distTime(randEngine), std::to_string(distText(randEngine)));
+    case Task::Calculate:
+        newTask = new CalculateTask(sendId, std::to_string(distText(randEngine)));
         break;
 
     case Task::Hashing:
-        newTask = new HashingTask(sendId, distTime(randEngine), std::to_string(distText(randEngine)));
+        newTask = new HashingTask(sendId, std::to_string(distText(randEngine)));
         break;
     default:
         break;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(newTask->timeArrival));
-    _queue->addElement(newTask);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    _queue->PushTask(newTask);
 }

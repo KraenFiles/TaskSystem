@@ -9,9 +9,7 @@
 #include <iostream>
 
 #include "Queue.h"
-#include "Stack.h"
 #include "Task.h"
-#include "Process.h"
 #include "TaskGeneration.h"
 #include "TaskDistributor.h"
 
@@ -21,18 +19,8 @@ using std::cout;
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
 {
     Queue *_queue = new Queue();
-    Stack *_stack = new Stack();
-    Process<PrintTask> *printProc = new Process<PrintTask>();
-    auto asyncPrint = std::thread(&Process<PrintTask>::exec, printProc);
-    asyncPrint.detach();
-    Process<AddTask> *addProc = new Process<AddTask>();
-    auto asyncAdd = std::thread(&Process<AddTask>::exec, addProc);
-    asyncAdd.detach();
-    Process<HashingTask> *hashProc = new Process<HashingTask>();
-    auto asyncHash = std::thread(&Process<HashingTask>::exec, hashProc);
-    asyncHash.detach();
-    TaskDistributor *taskDist = new TaskDistributor(_queue, _stack, printProc, addProc, hashProc);
-    auto asyncDist = std::thread(&TaskDistributor::exec, taskDist);
+    TaskDistributor *taskDist = new TaskDistributor(_queue);
+    auto asyncDist = std::thread(&TaskDistributor::Exec, taskDist);
     asyncDist.detach();
 
     TaskGeneration * taskGen = new TaskGeneration(_queue);
@@ -51,25 +39,21 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
             std::string text;
             cout << "Выберите текст для задания: ";
             cin >> text;
-            uint64_t time;
-            cout << "Введите время отправки в миллисекундах: ";
-            cin >> time;
 
             Task::TaskType type = Task::NoType;
             if (num >= 0 && num <= 2)
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(time));
                 type = static_cast<Task::TaskType>(num);
                 switch (type)
                 {
                 case Task::Print:
-                    _queue->addElement(new PrintTask(id, time, text));
+                    _queue->PushTask(new PrintTask(id, text));
                     break;
-                case Task::Added:
-                    _queue->addElement(new AddTask(id, time, text));
+                case Task::Calculate:
+                    _queue->PushTask(new CalculateTask(id, text));
                     break;
                 case Task::Hashing:
-                    _queue->addElement(new HashingTask(id, time, text));
+                    _queue->PushTask(new HashingTask(id, text));
                     break;
                 default:
                     break;
@@ -79,13 +63,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[])
         }
         else if (num == 2)
         {
-            taskGen->setId(id);
-            taskGen->exec();
+            taskGen->SetId(id);
+            taskGen->Exec();
         }
     } while (cin);
-    taskDist->stop();
-    printProc->stop();
-    addProc->stop();
-    hashProc->stop();
+    taskDist->Stop();
+    delete taskDist;
+    delete taskGen;
+    delete _queue;
     return 0;
 }

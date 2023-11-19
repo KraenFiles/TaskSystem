@@ -15,12 +15,12 @@ struct Task
     };
 
     Task();
-    Task(int32_t _id, const std::string &text, TaskType setType = NoType);
+    Task(int32_t id, const std::string &text, TaskType setType = NoType);
     virtual ~Task() = default;
     virtual void startTask() = 0;
     virtual Task *clone() const = 0;
 
-    int32_t id;
+    int32_t _id;
     std::string _text;
 
     inline TaskType type() const { return _type; }

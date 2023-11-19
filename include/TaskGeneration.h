@@ -13,12 +13,12 @@ public:
     TaskGeneration(Queue *queue);
     ~TaskGeneration();
 
-    void exec();
+    void Exec();
 
-    inline void setId(int32_t id) { sendId = id; }
+    inline void SetId(int32_t id) { sendId = id; }
 
 protected:
-    void createTask();
+    void CreateTask();
 
 private:
     Queue *_queue;

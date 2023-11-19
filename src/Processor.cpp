@@ -17,7 +17,7 @@ void Processor::SetTask(const Task *newTask)
 {
     std::lock_guard<std::mutex> lock(_procMutex);
     _task = newTask->clone();
-    std::cout << "Задача установлена в процессор c id: " << _task->id << std::endl;
+    std::cout << "Задача установлена в процессор c id: " << _task->_id << std::endl;
 }
 
 void Processor::Exec()
